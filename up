@@ -6,7 +6,8 @@ sudo podman run -d \
   --name vault \
   --restart unless-stopped \
   --cap-add IPC_LOCK \
-  -e 'VAULT_LOCAL_CONFIG={"backend": {"file": {"path": "/vault/file"}}, "listener": {"tcp": {"address": "0.0.0.0:8888", "tls_disable": 1}}, "ui": 1, "default_lease_ttl": "168h", ">  -e 'VAULT_ADDR=http://0.0.0.0:8888' \
+  -e 'VAULT_LOCAL_CONFIG={"backend": {"file": {"path": "/vault/file"}}, "listener": {"tcp": {"address": "0.0.0.0:8888", "tls_disable": 1}}, "ui": 1, "default_lease_ttl": "168h", "max_lease_ttl": "720h"}' \
+  -e 'VAULT_ADDR=http://0.0.0.0:8888' \
   -e 'VAULT_API_ADDR=http://0.0.0.0:8888' \
   -v vault-config:/vault/config \
   -v vault-policies:/vault/policies \
@@ -14,3 +15,6 @@ sudo podman run -d \
   -v vault-logs:/vault/logs \
   -p 8888:8888 \
   vault server
+
+echo ==============================================================================
+echo Don\'t forget to unseal vault \!
