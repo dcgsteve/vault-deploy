@@ -21,9 +21,8 @@ sudo podman run -d \
   -v vault-policies:/vault/policies \
   -v vault-data:/vault/data \
   -v vault-logs:/vault/logs \
-  -v vault-plugins:/vault/plugins \
   -p 8888:8888 \
-  vault server
+  dcgsteve/vault:002 server
 export VAULT_ADDR=http://127.0.0.1:8888
 
 echo ==============================================================================
@@ -35,15 +34,24 @@ echo "Initialising Vault and writing out helper files to user home directory..."
 echo "  vault-env    \= environment variables"
 echo "  vault-unseal \= unseal script"
 echo "  vault-info   \= full key and token info for Vault"
+echo "  vault-plugins\= enable use of secrets plugin"
 echo ""
 echo "Obviously this is only for development not for production \!"
 vault operator init > ~/vault-info
+
 echo export VAULT_ADDR=http://127.0.0.1:8888 > ~/vault-env
 echo export VAULT_TOKEN=$( cat ~/vault-info | grep 'Initial Root Token' | awk -F ' ' '{print $4}' ) >> ~/vault-env
+
 echo vault operator unseal $( cat ~/vault-info | grep 'Unseal Key 1' | awk -F ' ' '{print $4}' ) > ~/vault-unseal
 echo vault operator unseal $( cat ~/vault-info | grep 'Unseal Key 2' | awk -F ' ' '{print $4}' ) >> ~/vault-unseal
 echo vault operator unseal $( cat ~/vault-info | grep 'Unseal Key 3' | awk -F ' ' '{print $4}' ) >> ~/vault-unseal
+
+echo vault plugin register -sha256="ddaef75e7b7653e34e8b5efebe6253381a423428b68544cd79149deaff8b5f4e" -command="vault-secrets-gen" secret secrets-gen > ~/vault-plugins
+echo sudo podman exec vault setcap cap_ipc_lock=+ep /vault/plugins/vault-secrets-gen >> ~/vault-plugins
+
 chmod u+x ~/vault-unseal
+chmod u+x ~/vault-plugins
+
 ls -l ~/vault-*
 
 echo ==============================================================================
