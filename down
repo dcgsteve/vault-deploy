@@ -1,5 +1,0 @@
-#!/bin/bash
-
-echo ==============================================================================
-echo Stopping Vault ...
-sudo podman stop vault && sudo podman rm vault
