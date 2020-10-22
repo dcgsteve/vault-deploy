@@ -12,10 +12,8 @@
 ###################################################################################
 # Options
 ###################################################################################
-# Only option is to choose where the script outputs it's helper files 
-# As per comments below, these files contain *all* keys to Vault - in production this information would
-# be managed in a much more secure way :)
 HELPER_FILES_DIR=~/vault
+URL=127.0.0.1
 
 ###################################################################################
 # Main script
@@ -35,6 +33,7 @@ docker run -d \
   --name vault \
   --restart unless-stopped \
   --cap-add IPC_LOCK \
+  -p 8888:8888 \
   -e 'VAULT_LOCAL_CONFIG={"backend": {"file": {"path": "/vault/file"}}, "listener": {"tcp": {"address": "0.0.0.0:8888", "tls_disable": 1}}, "ui": 0, "default_lease_ttl": "168h", "max_lease_ttl": "720h", "plugin_directory": "/vault/plugins"}' \
   -e 'VAULT_ADDR=http://0.0.0.0:8888' \
   -e 'VAULT_API_ADDR=http://0.0.0.0:8888' \
@@ -42,10 +41,10 @@ docker run -d \
   -v vault-policies:/vault/policies \
   -v vault-data:/vault/data \
   -v vault-logs:/vault/logs \
-  -p 8888:8888 \
+  -v vault-certs:/vault/certs \
   dcgsteve/vault:002 server
 
-export VAULT_ADDR=http://127.0.0.1:8888
+export VAULT_ADDR=http://${URL}:8888
 
 echo ==============================================================================
 echo Pause for Vault to come up ...
@@ -65,7 +64,7 @@ echo "  vault-plugins = enable use of secrets plugin"
 echo ""
 echo "Obviously these helper files are only for development not for production !"
 
-echo export VAULT_ADDR=http://127.0.0.1:8888 > $HELPER_FILES_DIR/vault-env
+echo export VAULT_ADDR=http://${URL}:8888 > $HELPER_FILES_DIR/vault-env
 echo export VAULT_TOKEN=$( cat $HELPER_FILES_DIR/vault-info | grep 'Initial Root Token' | awk -F ' ' '{print $4}' ) >> $HELPER_FILES_DIR/vault-env
 
 echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 1' | awk -F ' ' '{print $4}' ) > $HELPER_FILES_DIR/vault-unseal
