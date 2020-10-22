@@ -53,7 +53,7 @@ export VAULT_ADDR=http://${URL}:8888
 
 echo ==============================================================================
 echo Pause for Vault to come up ...
-sleep 1
+sleep 5
 
 echo ==============================================================================
 echo "Initialising Vault ..."
@@ -65,22 +65,21 @@ echo "Writing out developer helper files ..."
 echo "  vault-env     = environment variables"
 echo "  vault-unseal  = unseal script"
 echo "  vault-info    = full key and token info for Vault"
-echo "  vault-plugins = enable use of secrets plugin"
+echo "  vault-plugins = enable use of secrets plugin (run once)"
 echo ""
 echo "Obviously these helper files are only for development not for production !"
 
 echo export VAULT_ADDR=http://${URL}:8888 > $HELPER_FILES_DIR/vault-env
 echo export VAULT_TOKEN=$( cat $HELPER_FILES_DIR/vault-info | grep 'Initial Root Token' | awk -F ' ' '{print $4}' ) >> $HELPER_FILES_DIR/vault-env
 
-echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 1' | awk -F ' ' '{print $4}' ) > $HELPER_FILES_DIR/vault-unseal
-echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 2' | awk -F ' ' '{print $4}' ) >> $HELPER_FILES_DIR/vault-unseal
-echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 3' | awk -F ' ' '{print $4}' ) >> $HELPER_FILES_DIR/vault-unseal
+echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 1' | awk -F ' ' '{print $4}' ) > $HELPER_FILES_DIR/vault-unseal.sh
+echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 2' | awk -F ' ' '{print $4}' ) >> $HELPER_FILES_DIR/vault-unseal.sh
+echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 3' | awk -F ' ' '{print $4}' ) >> $HELPER_FILES_DIR/vault-unseal.sh
 
-echo vault plugin register -sha256="ddaef75e7b7653e34e8b5efebe6253381a423428b68544cd79149deaff8b5f4e" -command="vault-secrets-gen" secret secrets-gen > $HELPER_FILES_DIR/vault-plugins
-echo docker exec vault setcap cap_ipc_lock=+ep /vault/plugins/vault-secrets-gen >> $HELPER_FILES_DIR/vault-plugins
+cp vault-configure-plugin.sh $HELPER_FILES_DIR/.
 
-chmod u+x $HELPER_FILES_DIR/vault-unseal
-chmod u+x $HELPER_FILES_DIR/vault-plugins
+chmod u+x $HELPER_FILES_DIR/vault-unseal.sh
+chmod u+x $HELPER_FILES_DIR/vault-configure-plugin.sh
 
 ls -l $HELPER_FILES_DIR
 
