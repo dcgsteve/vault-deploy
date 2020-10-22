@@ -61,11 +61,12 @@ mkdir -p $HELPER_FILES_DIR
 vault operator init > $HELPER_FILES_DIR/vault-info
 
 echo ==============================================================================
-echo "Writing out developer helper files ..."
-echo "  vault-env     = environment variables"
-echo "  vault-unseal  = unseal script"
-echo "  vault-info    = full key and token info for Vault"
-echo "  vault-plugins = enable use of secrets plugin (run once)"
+echo "Writing out developer helper files to $HELPER_FILES_DIR ..."
+echo ""
+echo "                   vault-env = environment variables"
+echo "                  vault-info = full key and token info for Vault"
+echo "             vault-unseal.sh = unseal script"
+echo "  vault-configure-plugins.sh = configure secrets plugin (run once)"
 echo ""
 echo "Obviously these helper files are only for development not for production !"
 
@@ -80,8 +81,6 @@ cp vault-configure-plugin.sh $HELPER_FILES_DIR/.
 
 chmod u+x $HELPER_FILES_DIR/vault-unseal.sh
 chmod u+x $HELPER_FILES_DIR/vault-configure-plugin.sh
-
-ls -l $HELPER_FILES_DIR
 
 echo ==============================================================================
 echo Done
