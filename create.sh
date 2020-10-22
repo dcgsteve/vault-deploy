@@ -10,6 +10,11 @@
 # - memory lock is enabled
 
 ###################################################################################
+# Check if Vault CLI is available
+###################################################################################
+command -v vvault >/dev/null 2>&1 || { echo >&2 "Hashicorp Vault CLI needs to be installed - check out helper script 'getvault.sh'. Aborting."; exit 1; }
+
+###################################################################################
 # Options
 ###################################################################################
 HELPER_FILES_DIR=~/vault
