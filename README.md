@@ -56,3 +56,10 @@ Key      Value
 ---      -----
 value    Dx7rhPXfEZa79t7uwPr27Hl62pgPvsI1Sx8N
 ```
+
+___
+## Examples
+
+See examples.md for some basic usage examples once you have Vault up and running
+
+___
