@@ -17,7 +17,6 @@ ___
 Path          Type           Accessor                Description
 ----          ----           --------                -----------
 cubbyhole/    cubbyhole      cubbyhole_97ede3af      per-token private secret storage
-gen/          secrets-gen    secrets-gen_392f375b    n/a
 identity/     identity       identity_e023da0e       identity store
 sys/          system         system_4592c9a3         system endpoints used for control, policy and debugging
 ```
@@ -30,19 +29,24 @@ Success! Enabled the kv secrets engine at: /project1/
 ___
 ## Simple write of data to key-value store for project
 `vault write project1/my-secret foo=bar`
-
-___
-## Get my-secret back
-`vaule read project1/my-secret`
 ```
 Success! Data written to: project1/my-secret
+```
+___
+## Get my-secret back
+`vault read project1/my-secret`
+```
+Key                 Value
+---                 -----
+refresh_interval    168h
+foo                 bar
 ```
 
 ___
 ## Get just the value of 'foo' secret back via JSON
-`vault read -format json project1/my-secret | jq .data.foo`
+`vault read -format json project1/my-secret | jq -r .data.foo`
 ```
-"bar"
+bar
 ```
 
 ___
