@@ -47,16 +47,6 @@ As you can see though from the test done above, the Vault is still currently sea
 
 Running this will call Vault three times, each time using a different master key. once three keys have been entered the Vault is unsealed. Run the `vault status` command again to check (you should see the `sealed` line now showing false.)
 
-### *Using the secrets plugin*
-As part of the Vault configuration, a plugin that allows Vault to generate passwords was added and activated (see https://github.com/sethvargo/vault-secrets-gen for details on the plugin itself). In addition, a new path was added to the default Vault (`/gen`) configured against this plugin. Because of this, you should be able to use this path straight away (provided you have policy rights to `/gen` of course!)
-
-To test this out run the following: `vault write gen/password length=36 symbols=0`. The output should be similar to the below, but obviously with a different Value :)
-```
-Key      Value
----      -----
-value    Dx7rhPXfEZa79t7uwPr27Hl62pgPvsI1Sx8N
-```
-
 ___
 ## Examples
 

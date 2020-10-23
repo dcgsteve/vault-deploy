@@ -47,7 +47,7 @@ docker run -d \
   -v vault-data:/vault/data \
   -v vault-logs:/vault/logs \
   -v vault-certs:/vault/certs \
-  dcgsteve/vault:002 server
+  vault server
 
 export VAULT_ADDR=http://${URL}:8888
 
@@ -66,7 +66,6 @@ echo ""
 echo "                   vault-env = environment variables"
 echo "                  vault-info = full key and token info for Vault"
 echo "             vault-unseal.sh = unseal script"
-echo "  vault-configure-plugins.sh = configure secrets plugin (run once)"
 echo ""
 echo "Obviously these helper files are only for development not for production !"
 
@@ -77,10 +76,7 @@ echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Ke
 echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 2' | awk -F ' ' '{print $4}' ) >> $HELPER_FILES_DIR/vault-unseal.sh
 echo vault operator unseal $( cat $HELPER_FILES_DIR/vault-info | grep 'Unseal Key 3' | awk -F ' ' '{print $4}' ) >> $HELPER_FILES_DIR/vault-unseal.sh
 
-cp vault-configure-plugin.sh $HELPER_FILES_DIR/.
-
 chmod u+x $HELPER_FILES_DIR/vault-unseal.sh
-chmod u+x $HELPER_FILES_DIR/vault-configure-plugin.sh
 
 echo ==============================================================================
 echo Done
